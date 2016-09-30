@@ -1,0 +1,67 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+    defaultConfig {
+        applicationId "com.example.zchao.viewpagergroup"
+        minSdkVersion 11
+        targetSdkVersion 23
+        versionCode 2
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    archivesBaseName = "spiceGirl${defaultConfig.versionName}-${defaultConfig.versionCode}"
+    signingConfigs{
+        myConfig{
+            storeFile file("testKeystory.jks")
+            storePassword"zchao123"
+            keyAlias"xiagao"
+            keyPassword"zchao123"
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.myConfig
+            applicationIdSuffix ".len"
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            minifyEnabled false
+        }
+
+    }
+
+    productFlavors{
+        nomal{
+
+        }
+        publish{
+            applicationId "com.example.zchao.viewpagergroup"
+            minSdkVersion 11
+            targetSdkVersion 23
+            versionCode 5
+            versionName "1.0"
+        }
+    }
+}
+
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile project(':library')
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+}
