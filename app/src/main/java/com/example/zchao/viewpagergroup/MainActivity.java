@@ -1,5 +1,7 @@
 package com.example.zchao.viewpagergroup;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -8,9 +10,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
@@ -38,9 +42,10 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
     private static boolean isFullScreen = false;
     private static boolean isNotitle = false;
     private static boolean isPopupWindowShow = false;
-    private RelativeLayout mRoot;
+    private RelativeLayout mContent;
     private FloatingActionButton mTypeBtn;
     private PopupWindow mTypeSelectWindow;
+    private FrameLayout mRoot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,8 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
 
         mTypeBtn = (FloatingActionButton) findViewById(R.id.type);
         mViewPager = (VerticalViewPager) findViewById(R.id.vertical_viewpager);
-        mRoot = (RelativeLayout) findViewById(R.id.activity_main);
+        mContent = (RelativeLayout) findViewById(R.id.activity_main);
+        mRoot = (FrameLayout) findViewById(R.id.root);
 
         myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
 
@@ -88,7 +94,7 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
             }
         });
 
-        getMoreDate("7004", String.valueOf(page), false);
+        getMoreDate("4009", String.valueOf(page), false);
     }
 
     /**
@@ -144,24 +150,29 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
     }
 
     private void changePopupWindow() {
-        if (isPopupWindowShow) {
+        if (mTypeSelectWindow != null && mTypeSelectWindow.isShowing()) {
             hidePopupWindow();
         } else {
             showPopupWindow();
         }
-        isPopupWindowShow = !isPopupWindowShow;
     }
 
     private void showPopupWindow() {
+        DisplayMetrics metrix = ContextUtils.getMetrix(this);
         if (mTypeSelectWindow == null) {
-            DisplayMetrics metrix = ContextUtils.getMetrix(this);
             View popView = getLayoutInflater().inflate(R.layout.main_activity_type_select, null);
             mTypeSelectWindow = new PopupWindow(popView, metrix.widthPixels/2, (int) ContextUtils.dp2pix(this, 200), true);
+            mTypeSelectWindow.setOutsideTouchable(true);
+            mTypeSelectWindow.setFocusable(true);
+            mTypeSelectWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
+            mTypeSelectWindow.setTouchable(true);
+
         }
+        mTypeSelectWindow.showAtLocation(mRoot, Gravity.BOTTOM, metrix.widthPixels/2, (int) (mTypeBtn.getHeight() + ContextUtils.dp2pix(this, 30)));
     }
 
     private void hidePopupWindow() {
-
+            mTypeSelectWindow.dismiss();
     }
 
 
