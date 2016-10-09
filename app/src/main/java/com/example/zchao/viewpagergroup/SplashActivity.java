@@ -15,7 +15,7 @@ public class SplashActivity extends FragmentActivity {
 
     private ImageView splash;
     private long startTime;
-    private static final long DELAY_TIME = 800;
+    private static final long DELAY_TIME = 2000;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

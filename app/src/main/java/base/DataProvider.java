@@ -5,6 +5,6 @@ package base;
  */
 
 public interface DataProvider {
-    void getMoreDate(String...param);
+    void getMoreDate(String typeId, String page, boolean forceRefresh);
     void refresh();
 }

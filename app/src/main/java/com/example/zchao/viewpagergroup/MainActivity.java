@@ -1,6 +1,7 @@
 package com.example.zchao.viewpagergroup;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -24,7 +25,7 @@ import util.SingCallBack;
  * 实现原理，首先自定义一个竖直方向的Viewpager {@link #(com.example.zchao.viewpagergroup.VerticalViewPager)}
  * 此pager用来包裹多个Fragment{@link #(PagerFragment)};在PagerFragment中按照正常的Viewpager使用即可；
  */
-public class MainActivity extends FragmentActivity implements DataProvider{
+public class MainActivity extends FragmentActivity implements DataProvider, View.OnClickListener{
 
     private VerticalViewPager mViewPager;
     private static final float MIN_SCALE = 0.75f;
@@ -34,6 +35,7 @@ public class MainActivity extends FragmentActivity implements DataProvider{
     private static boolean isFullScreen = false;
     private static boolean isNotitle = false;
     private RelativeLayout mRoot;
+    private FloatingActionButton mTypeBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +43,12 @@ public class MainActivity extends FragmentActivity implements DataProvider{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mTypeBtn = (FloatingActionButton) findViewById(R.id.type);
         mViewPager = (VerticalViewPager) findViewById(R.id.vertical_viewpager);
         mRoot = (RelativeLayout) findViewById(R.id.activity_main);
         myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+
+        mTypeBtn.setOnClickListener(this);
 
         mViewPager.setAdapter(myPagerAdapter);
 
@@ -77,9 +82,13 @@ public class MainActivity extends FragmentActivity implements DataProvider{
             }
         });
 
-        getMoreDate(String.valueOf(page));
+        getMoreDate("4002", String.valueOf(page), false);
     }
 
+    /**
+     * 切换全屏显示
+     * @param isFull 当前是否是全屏显示
+     */
     private void changeFullScreen(boolean isFull) {
         if (isFull) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -98,7 +107,7 @@ public class MainActivity extends FragmentActivity implements DataProvider{
     }
 
     @Override
-    public void getMoreDate(String... param) {
+    public void getMoreDate(String typeId, String page, boolean forceRefresh) {
         ApiManager.getInstance().getAllImageByType(new SingCallBack<PrettyGrilImage>() {
             @Override
             public void onDateReceive(PrettyGrilImage object, Throwable throwable, boolean isSuccess) {
@@ -110,7 +119,7 @@ public class MainActivity extends FragmentActivity implements DataProvider{
                     }
                 }
             }
-        }, param[0]);
+        }, typeId, page, forceRefresh);
     }
 
 
@@ -119,6 +128,18 @@ public class MainActivity extends FragmentActivity implements DataProvider{
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.type:
+                myPagerAdapter.clearAllDate();
+                break;
+        }
+    }
+
+    /**
+     * 竖直方向Viewpager的Adapter
+     */
     class MyPagerAdapter extends FragmentPagerAdapter {
         public static final String IMG_KEY = "img_key";
         ArrayList<PrettyGrilImage.ShowapiResBodyBean.PagebeanBean.ContentlistBean> list = new ArrayList<>();
@@ -164,12 +185,27 @@ public class MainActivity extends FragmentActivity implements DataProvider{
             list.add(object);
             notifyDataSetChanged();
         }
+
+        /**
+         * 批量加载数据
+         * @param array
+         */
         public void addAlllist(PrettyGrilImage.ShowapiResBodyBean.PagebeanBean array) {
             if (array == null || array.contentlist.size() == 0) {
                 return;
             }
             list.addAll(array.contentlist);
             notifyDataSetChanged();
+        }
+
+        /**
+         * 清除所有数据
+         */
+        public void clearAllDate() {
+            if (list != null) {
+                list.clear();
+                notifyDataSetChanged();
+            }
         }
     }
 

@@ -123,7 +123,7 @@ public class ApiManager {
      * @param force 是否强制刷新
      */
     public void getAllImageByType(final SingCallBack<PrettyGrilImage> callBack, final String typeId, final String page, final boolean force) {
-        final String allType = "key_all_type_" + page;
+        final String allType = "key_all_type_" + typeId + page;
         mExecutor.execute(new Runnable() {
             @Override
             public void run() {
