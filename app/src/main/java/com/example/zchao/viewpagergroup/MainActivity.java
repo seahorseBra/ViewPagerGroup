@@ -7,9 +7,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import base.DataProvider;
 import javabean.PrettyGrilImage;
 import util.ApiManager;
+import util.ContextUtils;
 import util.SingCallBack;
 
 /**
@@ -34,8 +37,10 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
     private MyPagerAdapter myPagerAdapter;
     private static boolean isFullScreen = false;
     private static boolean isNotitle = false;
+    private static boolean isPopupWindowShow = false;
     private RelativeLayout mRoot;
     private FloatingActionButton mTypeBtn;
+    private PopupWindow mTypeSelectWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,7 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
         mTypeBtn = (FloatingActionButton) findViewById(R.id.type);
         mViewPager = (VerticalViewPager) findViewById(R.id.vertical_viewpager);
         mRoot = (RelativeLayout) findViewById(R.id.activity_main);
+
         myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
 
         mTypeBtn.setOnClickListener(this);
@@ -82,7 +88,7 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
             }
         });
 
-        getMoreDate("4002", String.valueOf(page), false);
+        getMoreDate("7004", String.valueOf(page), false);
     }
 
     /**
@@ -132,10 +138,32 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.type:
-                myPagerAdapter.clearAllDate();
+                changePopupWindow();
                 break;
         }
     }
+
+    private void changePopupWindow() {
+        if (isPopupWindowShow) {
+            hidePopupWindow();
+        } else {
+            showPopupWindow();
+        }
+        isPopupWindowShow = !isPopupWindowShow;
+    }
+
+    private void showPopupWindow() {
+        if (mTypeSelectWindow == null) {
+            DisplayMetrics metrix = ContextUtils.getMetrix(this);
+            View popView = getLayoutInflater().inflate(R.layout.main_activity_type_select, null);
+            mTypeSelectWindow = new PopupWindow(popView, metrix.widthPixels/2, (int) ContextUtils.dp2pix(this, 200), true);
+        }
+    }
+
+    private void hidePopupWindow() {
+
+    }
+
 
     /**
      * 竖直方向Viewpager的Adapter
