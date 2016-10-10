@@ -2,6 +2,7 @@ package com.example.zchao.viewpagergroup;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
@@ -34,8 +37,10 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
     private MyPagerAdapter myPagerAdapter;
     private static boolean isFullScreen = false;
     private static boolean isNotitle = false;
+    private static boolean isPopupWindowShown = false;
     private RelativeLayout mRoot;
     private FloatingActionButton mTypeBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,9 +137,29 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.type:
-                myPagerAdapter.clearAllDate();
+                showTypeList();
                 break;
         }
+    }
+
+    /**
+     * 显示或隐藏类别列表
+     */
+    private void showTypeList() {
+        if (isPopupWindowShown) {
+            hidePopupWindow();
+        } else {
+            showPopupWindow();
+        }
+
+    }
+
+    private void showPopupWindow() {
+
+    }
+
+    private void hidePopupWindow() {
+
     }
 
     /**
