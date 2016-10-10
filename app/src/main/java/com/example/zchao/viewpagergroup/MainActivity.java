@@ -1,5 +1,7 @@
 package com.example.zchao.viewpagergroup;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,11 +10,13 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
@@ -22,6 +26,7 @@ import java.util.ArrayList;
 import base.DataProvider;
 import javabean.PrettyGrilImage;
 import util.ApiManager;
+import util.ContextUtils;
 import util.SingCallBack;
 
 /**
@@ -38,8 +43,11 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
     private static boolean isFullScreen = false;
     private static boolean isNotitle = false;
     private static boolean isPopupWindowShown = false;
-    private RelativeLayout mRoot;
+    private static boolean isPopupWindowShow = false;
+    private RelativeLayout mContent;
     private FloatingActionButton mTypeBtn;
+    private PopupWindow mTypeSelectWindow;
+    private FrameLayout mRoot;
 
 
     @Override
@@ -50,7 +58,9 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
 
         mTypeBtn = (FloatingActionButton) findViewById(R.id.type);
         mViewPager = (VerticalViewPager) findViewById(R.id.vertical_viewpager);
-        mRoot = (RelativeLayout) findViewById(R.id.activity_main);
+        mContent = (RelativeLayout) findViewById(R.id.activity_main);
+        mRoot = (FrameLayout) findViewById(R.id.root);
+
         myPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
 
         mTypeBtn.setOnClickListener(this);
@@ -87,7 +97,7 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
             }
         });
 
-        getMoreDate("4002", String.valueOf(page), false);
+        getMoreDate("4009", String.valueOf(page), false);
     }
 
     /**
@@ -137,7 +147,7 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.type:
-                showTypeList();
+                changePopupWindow();
                 break;
         }
     }
@@ -145,22 +155,32 @@ public class MainActivity extends FragmentActivity implements DataProvider, View
     /**
      * 显示或隐藏类别列表
      */
-    private void showTypeList() {
-        if (isPopupWindowShown) {
+    private void changePopupWindow() {
+        if (mTypeSelectWindow != null && mTypeSelectWindow.isShowing()) {
             hidePopupWindow();
         } else {
             showPopupWindow();
         }
-
     }
 
     private void showPopupWindow() {
+        DisplayMetrics metrix = ContextUtils.getMetrix(this);
+        if (mTypeSelectWindow == null) {
+            View popView = getLayoutInflater().inflate(R.layout.main_activity_type_select, null);
+            mTypeSelectWindow = new PopupWindow(popView, metrix.widthPixels/2, (int) ContextUtils.dp2pix(this, 200), true);
+            mTypeSelectWindow.setOutsideTouchable(true);
+            mTypeSelectWindow.setFocusable(true);
+            mTypeSelectWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
+            mTypeSelectWindow.setTouchable(true);
 
+        }
+        mTypeSelectWindow.showAtLocation(mRoot, Gravity.BOTTOM, metrix.widthPixels/2, (int) (mTypeBtn.getHeight() + ContextUtils.dp2pix(this, 30)));
     }
 
     private void hidePopupWindow() {
-
+            mTypeSelectWindow.dismiss();
     }
+
 
     /**
      * 竖直方向Viewpager的Adapter

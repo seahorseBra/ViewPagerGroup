@@ -3,6 +3,8 @@ package com.example.zchao.viewpagergroup;
 import android.app.Application;
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 
 import com.nostra13.universalimageloader.cache.disc.impl.LimitedAgeDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -48,4 +50,7 @@ public class CApp extends Application {
                 .build();
         ImageLoader.getInstance().init(config);
     }
+
+
+
 }
