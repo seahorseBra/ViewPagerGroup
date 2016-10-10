@@ -44,6 +44,7 @@ public class PagerFragment extends Fragment {
     private OnPagerItemClick onPagerItemClick;
     private OnPagerItemLongClick onPagerItemLongClick;
     private DisplayImageOptions options;
+    private MottoAdapter adapter;
 
     public PagerFragment() {
 
@@ -92,12 +93,19 @@ public class PagerFragment extends Fragment {
                 .build();
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
 
-        MottoAdapter adapter = new MottoAdapter();
+        adapter = new MottoAdapter();
         mViewPager.setAdapter(adapter);
         if (data != null) {
             adapter.addAllList(data);
         }
     }
+
+    public void refreshData(PrettyGrilImage.ShowapiResBodyBean.PagebeanBean.ContentlistBean array) {
+        if (adapter != null) {
+            adapter.addAllList(array);
+        }
+    }
+
 
     class MottoAdapter extends PagerAdapter {
         ArrayList<PrettyGrilImage.ShowapiResBodyBean.PagebeanBean.ContentlistBean.ListBean> list = new ArrayList<>();
@@ -113,6 +121,7 @@ public class PagerFragment extends Fragment {
             if (array == null) {
                 return;
             }
+            list.clear();
             list.addAll(array.list);
             notifyDataSetChanged();
         }

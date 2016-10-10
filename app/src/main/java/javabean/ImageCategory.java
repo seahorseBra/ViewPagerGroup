@@ -1,59 +1,64 @@
 package javabean;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Created by mavin on 2016/10/9.
  */
 public class ImageCategory {
-    private static LinkedHashMap<String, Integer> typeId = null;
+    public static HashMap<Integer, String> typeIds = null;
+    public static final List<Integer> allIds = Arrays.asList(2001,2002,2003,2004,2005,2006,2007,4001,4002,4003,4004,4005,4006,4007,4008,4009,4010,4011,4012,4013,4014);
 
-    private void inite() {
+    private static void inite() {
         synchronized (ImageCategory.class) {
-            if (typeId == null) {
-                typeId = new LinkedHashMap<>();
+            if (typeIds == null) {
+                typeIds = new LinkedHashMap<>();
             }
-            typeId.put("中国明星", 2001);
-            typeId.put("欧美明星", 2002);
-            typeId.put("中国女明星", 2003);
-            typeId.put("中国男明星", 2004);
-            typeId.put("韩国明星", 2005);
-            typeId.put("欧美女明星", 2006);
-            typeId.put("欧美男明星", 2007);
+            typeIds.put(2001, "中国明星");
+            typeIds.put(2002, "欧美明星");
+            typeIds.put(2003, "中国女明星");
+            typeIds.put(2004, "中国男明星");
+            typeIds.put(2005, "韩国明星");
+            typeIds.put(2006, "欧美女明星");
+            typeIds.put(2007, "欧美男明星");
 
-            typeId.put("清纯", 4001);
-            typeId.put("气质", 4002);
-            typeId.put("萌女", 4003);
-            typeId.put("校花", 4004);
-            typeId.put("婚纱", 4005);
-            typeId.put("街拍", 4006);
-            typeId.put("非主流", 4007);
-            typeId.put("美腿", 4008);
-            typeId.put("性感", 4009);
-            typeId.put("车模", 4010);
-            typeId.put("男色图片", 4011);
-            typeId.put("模特美女", 4012);
-            typeId.put("美女魅惑", 4013);
-            typeId.put("日韩美女", 4014);
+            typeIds.put(4001, "清纯");
+            typeIds.put(4002, "气质");
+            typeIds.put(4003, "萌女");
+            typeIds.put(4004, "校花");
+            typeIds.put(4005, "婚纱");
+            typeIds.put(4006, "街拍");
+            typeIds.put(4007, "非主流");
+            typeIds.put(4008, "美腿");
+            typeIds.put(4009, "性感");
+            typeIds.put(4010, "车模");
+            typeIds.put(4011, "男色图片");
+            typeIds.put(4012, "模特美女");
+            typeIds.put(4013, "美女魅惑");
+            typeIds.put(4014, "日韩美女");
         }
     }
 
-    public LinkedHashMap<String, Integer> getAllType() {
-        if (typeId == null) {
+    public static HashMap<Integer, String> getAllType() {
+        if (typeIds == null) {
             inite();
         }
-        return typeId;
+        return typeIds;
     }
 
-    public int getTypeIdByName(String name) {
-        int id = -1;
-        if (typeId == null) {
+    public static String getTypeNameById(Integer typeId) {
+        String name = "";
+        if (typeIds == null) {
             inite();
         }
-
-        if (typeId.containsKey(name)) {
-            id = typeId.get(name);
+        if (typeIds.containsKey(typeId)) {
+            name = typeIds.get(typeId);
         }
-        return id;
+        return name;
     }
 }

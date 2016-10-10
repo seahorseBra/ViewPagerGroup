@@ -27,8 +27,8 @@ public class CApp extends Application {
     public void onCreate() {
         super.onCreate();
 
+        AppSetting.getInstance().inite(getApplicationContext());
         ApiManager.getInstance().inite(getApplicationContext());
-        AppSetting.inite(getApplicationContext());
         initImageLoader(getApplicationContext());
     }
 

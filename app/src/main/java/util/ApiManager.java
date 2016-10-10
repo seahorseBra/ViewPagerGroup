@@ -130,7 +130,7 @@ public class ApiManager {
                 Type type = new TypeToken<CacheObj<PrettyGrilImage>>() {
                 }.getType();
                 CacheObj<PrettyGrilImage> obj = cacheManager.getObj(allType, type);
-                if (obj != null && obj.obj != null && obj.isOutOfDate(5 * 60 * 1000) && !force) {
+                if (obj != null && obj.obj != null && obj.isOutOfDate(5 * 60 * 1000)) {
                     postToMainLoop(callBack, obj.obj, null, true);
                     return;
                 }
